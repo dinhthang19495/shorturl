@@ -21,3 +21,4 @@ class shorturl(Document):
 
 # delete
 # x.delete()
+
