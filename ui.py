@@ -1,10 +1,10 @@
-import short
+import short_handler
 
 
 def user_interface():
     url = input("Please enter your url: ")
     print(url)
-    user = short.ReplaceUrl()
+    user = short_handler.ReplaceUrl()
     print(user.convert_long_to_short(url))
     print(user.convert_short_to_long("tt"))
     print(user.convert_short_to_long("http://uRshort.us/k"))
