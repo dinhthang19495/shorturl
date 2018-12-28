@@ -12,39 +12,40 @@ class ReplaceUrl:
                        51:'Z',52:'0',53:'1',54:'2',55:'3',56:'4',57:'5',58:'6',59:'7',60:'8',
                        61:'9'}
     BASE = 62
-
+    #our url
+    URL_TEMPLATE = "http://www.uRshort.us/"
     def __init__(self):
         self.count = 0
         self.urls = {}
-        pass
 
     # function to convert long url to short url
-    def convert_large_to_short(self, largeUrl: str):
+    def convert_long_to_short(self, longUrl: str):
         # Check if the large url is in the dict
-        if largeUrl in self.urls:
+        if longUrl in self.urls:
             # if it already exists, do sth
-            return self.convert_count_to_reduceurl(self.urls.get(largeUrl))
+            return self.URL_TEMPLATE + self.convert_count_to_reducedurl(self.urls.get(longUrl))
 
-        self.urls[largeUrl] = self.count
+        self.urls[longUrl] = self.count
 
         # get the count and convert it to the reduceurl
-        reduceurl = self.convert_count_to_reduceurl(self.count)
+        reducedurl = self.convert_count_to_reducedurl(self.count)
 
         # increment
         self.count = self.count + 1
 
         # return the url
-        return reduceurl
+        return self.URL_TEMPLATE + reducedurl
     # function to convert a short url to a large url
-    def convert_short_to_large(self, reduceurl: str):
-        cnt = self.convert_reduceurl_to_number(reduceurl)
-        for k,v in self.urls.items():
-            if self.v == cnt:
-                return k
+    def convert_short_to_long(self, reducedurl: str):
+        if reducedurl.startswith(ReplaceUrl.URL_TEMPLATE):
+            cnt = self.convert_reducedurl_to_number(reducedurl)
+            for k,v in self.urls.items():
+                if v == cnt:
+                    return k
         return "It is not in the database"
 
     # function to convert count to reduceurl
-    def convert_count_to_reduceurl(self, count: int):
+    def convert_count_to_reducedurl(self, count: int):
         values = []
         if count == 0:
             return ReplaceUrl.base_reduce_url.get(count)
@@ -54,17 +55,18 @@ class ReplaceUrl:
         return self.read_the_list(values)
     # function to read through the list
     def read_the_list(self, values: list):
-        tinyurl = ""
+        shorturl = ""
         for i in values:
-            tinyurl +=(ReplaceUrl.base_reduce_url.get(i))
-        return tinyurl
+            shorturl +=(ReplaceUrl.base_reduce_url.get(i))
+        return shorturl
 
     # function to convert reduceurl to number
-    def convert_reduceurl_to_number(self, reduceurl: str):
+    def convert_reducedurl_to_number(self, reducedurl: str):
+        reducedurl = ReplaceUrl.get_short_url(reducedurl)
         count = 0
-        temp_len = len(reduceurl) - 1
+        temp_len = len(reducedurl) - 1
         temp_dict = ReplaceUrl.flip_dict(ReplaceUrl.base_reduce_url)
-        for i in reduceurl:
+        for i in reducedurl:
             value = temp_dict.get(i)
             count += value * (ReplaceUrl.BASE**temp_len)
             temp_len -= 1
@@ -76,6 +78,10 @@ class ReplaceUrl:
         for k,v in map.items():
             new_dict[v] = k
         return new_dict
+    # function to get the url and return the short url
+    def get_short_url(url: str):
+        shorturl = url[len(ReplaceUrl.URL_TEMPLATE):]
+        return shorturl
 # reduceurl.com/aaaaa
 
 # 5 characters/digits to make 916,132,832 url
@@ -86,8 +92,11 @@ class ReplaceUrl:
 
 yo = ReplaceUrl()
 
-print(yo.convert_large_to_short('fakfoakfaofka'))
-print(yo.convert_large_to_short('face'))
-print(yo.convert_large_to_short('face'))
-print(yo.convert_large_to_short('face'))
-print(yo.convert_large_to_short('face'))
+print(yo.convert_long_to_short('fakfoakfaofka'))
+print(yo.convert_long_to_short('face'))
+print(yo.convert_long_to_short('face'))
+print(yo.convert_long_to_short('face'))
+print(yo.convert_long_to_short('face'))
+print(yo.convert_short_to_long('http://www.uRshort.us/a'))
+print(yo.convert_short_to_long('http://www.uRshort.us/u'))
+print(yo.convert_short_to_long('u'))
