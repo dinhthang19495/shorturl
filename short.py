@@ -23,7 +23,10 @@ class ReplaceUrl:
         # Check if the large url is in the dict
         if largeUrl in self.urls:
             # if it already exists, do sth
-            pass
+            return self.convert_count_to_reduceurl(self.urls.get(largeUrl))
+
+        self.urls[largeUrl] = self.count
+
         # get the count and convert it to the reduceurl
         reduceurl = self.convert_count_to_reduceurl(self.count)
 
@@ -31,17 +34,14 @@ class ReplaceUrl:
         self.count = self.count + 1
 
         # return the url
-        self.count = self.count + 1
-        pass
+        return reduceurl
     # function to convert a short url to a large url
-    def convert_short_to_large(self):
-        pass
-    # random function generator short url
-    def random_generator(self):
-        pass
-    # function to check if a short url has been created
-    def check_duplicate(self):
-        pass
+    def convert_short_to_large(self, reduceurl: str):
+        cnt = self.convert_reduceurl_to_number(reduceurl)
+        for k,v in self.urls.items():
+            if self.v == cnt:
+                return k
+        return "It is not in the database"
 
     # function to convert count to reduceurl
     def convert_count_to_reduceurl(self, count: int):
@@ -58,6 +58,7 @@ class ReplaceUrl:
         for i in values:
             tinyurl +=(ReplaceUrl.base_reduce_url.get(i))
         return tinyurl
+
     # function to convert reduceurl to number
     def convert_reduceurl_to_number(self, reduceurl: str):
         count = 0
@@ -83,3 +84,10 @@ class ReplaceUrl:
 
 # we expect to generate 1 million url in 6 months.
 
+yo = ReplaceUrl()
+
+print(yo.convert_large_to_short('fakfoakfaofka'))
+print(yo.convert_large_to_short('face'))
+print(yo.convert_large_to_short('face'))
+print(yo.convert_large_to_short('face'))
+print(yo.convert_large_to_short('face'))
