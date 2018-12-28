@@ -11,6 +11,7 @@ class ReplaceUrl:
                        41:'P',42:'Q',43:'R',44:'S',45:'T',46:'U',47:'V',48:'W',49:'X',50:'Y',
                        51:'Z',52:'0',53:'1',54:'2',55:'3',56:'4',57:'5',58:'6',59:'7',60:'8',
                        61:'9'}
+    BASE = 62
 
     def __init__(self):
         self.count = 0
@@ -44,34 +45,36 @@ class ReplaceUrl:
 
     # function to convert count to reduceurl
     def convert_count_to_reduceurl(self, count: int):
-        # if count is less than 62, do this
-        if count < 62:
+        values = []
+        if count == 0:
             return ReplaceUrl.base_reduce_url.get(count)
-        # if count is greater than 62, do this
-        else:
-            # create a list to contain values
-            values = []
-            # enter the while loop
-            while(count != 0):
-                # create a temp_cnt to store the value of count
-                temp_cnt = count
-                # create a loop count
-                loop_cnt = 0
-                # enter the inner while loop
-                while(temp_cnt > 62):
-                    temp_cnt = temp_cnt // 62
-                    loop_cnt = loop_cnt + 1
-                # add the temp value to the list
-                values.append(temp_cnt)
-                count = count - (temp_cnt * 62**loop_cnt)
-            return (self.read_the_list(values))
+        while count > 0:
+            values.insert(0, count % ReplaceUrl.BASE)
+            count = count // ReplaceUrl.BASE
+        return self.read_the_list(values)
     # function to read through the list
     def read_the_list(self, values: list):
         tinyurl = ""
         for i in values:
             tinyurl +=(ReplaceUrl.base_reduce_url.get(i))
         return tinyurl
-    # 
+    # function to convert reduceurl to number
+    def convert_reduceurl_to_number(self, reduceurl: str):
+        count = 0
+        temp_len = len(reduceurl) - 1
+        temp_dict = ReplaceUrl.flip_dict(ReplaceUrl.base_reduce_url)
+        for i in reduceurl:
+            value = temp_dict.get(i)
+            count += value * (ReplaceUrl.BASE**temp_len)
+            temp_len -= 1
+        return count
+
+    # function to flip the dictionary
+    def flip_dict(map: dict):
+        new_dict = {}
+        for k,v in map.items():
+            new_dict[v] = k
+        return new_dict
 # reduceurl.com/aaaaa
 
 # 5 characters/digits to make 916,132,832 url
