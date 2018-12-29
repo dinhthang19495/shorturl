@@ -20,9 +20,9 @@ def create_app() -> Flask:
     # Initialize Database
     db.init_app(app)
 
-    from project.api.hello import short_url_api_bp
+    from project.api import shorturl_api_bp
 
     URL_PREFIX = app.config["URL_PREFIX"]
-    app.register_blueprint(short_url_api_bp, url_prefix=URL_PREFIX)
+    app.register_blueprint(shorturl_api_bp, url_prefix=URL_PREFIX)
 
     return app

@@ -5,10 +5,10 @@ from flask import abort
 from flask import redirect
 import json
 
-short_url_api_bp = Blueprint("shorturl_api", "shorturl_api")
+shorturl_api_bp = Blueprint("shorturl_api", "shorturl_api")
 
 
-@short_url_api_bp.route('/url', methods=["POST"])
+@shorturl_api_bp.route('/url', methods=["POST"])
 def create_url():
     if request.method != "POST":
         abort(400)
@@ -23,7 +23,7 @@ def create_url():
     return json.dumps(url_obj)
 
 
-@short_url_api_bp.route('/url/<count>', methods=["GET"])
+@shorturl_api_bp.route('/url/<count>', methods=["GET"])
 def return_long_url(count):
     if request.method != "GET":
         abort(400)

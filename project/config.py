@@ -8,4 +8,4 @@ class BaseConfig:
     MONGODB_HOST = "localhost"
     MONGODB_PORT = 27017
 
-    URL_PREFIX = "/api/v1"
+    URL_PREFIX = "/api"
