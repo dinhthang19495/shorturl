@@ -1,4 +1,7 @@
+from project.models import ShortUrl
 # Class replaceUrl
+
+
 class ReplaceUrl:
     """
         We will take a long url and return a short url.
@@ -15,42 +18,39 @@ class ReplaceUrl:
     # our url
     URL_TEMPLATE = "http://www.uRshort.us/"
 
-    def __init__(self):
-        self.count = 0
-        self.urls = {}
-
     # function to convert long url to short url
-    def convert_long_to_short(self, long_url: str):
+    @staticmethod
+    def convert_long_to_short(large_url: str):
         # Check if the large url is in the dict
-        if long_url in self.urls:
-            # if it already exists, do sth
-            return self.URL_TEMPLATE + self.convert_count_to_reduced_url(self.urls.get(long_url))
+        temp_list = ShortUrl.objects
+        for i in temp_list:
+            if large_url == i["long_url"]:
+                return {"short_url_obj": i.return_dict(), "already_exist": True}
 
-        self.urls[long_url] = self.count
+        # get the count and convert it to the reduced url
+        tiny_url = ReplaceUrl.URL_TEMPLATE + ReplaceUrl.convert_count_to_reduced_url(len(temp_list))
+        db_object = ShortUrl(long_url=large_url, short_url=tiny_url, id=len(ShortUrl.objects))
+        db_object.save()
 
-        # get the count and convert it to the reduced_url
-        reduced_url = self.convert_count_to_reduced_url(self.count)
-
-        # increment
-        self.count = self.count + 1
-        # return the url
-        return self.URL_TEMPLATE + reduced_url
+        return {"short_url_obj": db_object.return_dict(), "already_exist": False}
     # function to convert a short url to a large url
 
-    def convert_short_to_long(self, reduced_url: str):
+    @staticmethod
+    def convert_short_to_long(reduced_url: str):
         # when the short url start with http://www.uRshort.us/, do this
         if reduced_url.startswith(ReplaceUrl.URL_TEMPLATE):
             # convert the short url to number
-            cnt = self.convert_reduced_url_to_number(reduced_url)
+            cnt = ReplaceUrl.convert_reduced_url_to_number(reduced_url)
             # if the number matches the value
-            for k, v in self.urls.items():
-                if v == cnt:
-                    return k
+            for i in ShortUrl.objects:
+                if i["id"] == cnt:
+                    return i["long_url"]
         # if the number doesn't match the value
-        return "It is not in the database"
+        return False
 
     # function to convert count to reduced url
-    def convert_count_to_reduced_url(self, count: int):
+    @staticmethod
+    def convert_count_to_reduced_url(count: int):
         values = []
         # if count = 0, match it with the position 0 from base reduce url
         if count == 0:
@@ -61,7 +61,7 @@ class ReplaceUrl:
             values.insert(0, count % ReplaceUrl.BASE)
             # get the whole number of count
             count = count // ReplaceUrl.BASE
-        return self.read_the_list(values)
+        return ReplaceUrl.read_the_list(values)
     # function to read through the list
 
     @staticmethod
@@ -110,23 +110,8 @@ class ReplaceUrl:
         # we shorten the url by taking the part after http://www.uRshort.us/
         short_url = new_url[len(ReplaceUrl.URL_TEMPLATE):]
         return short_url
+
 # http://www.uRshort.us/aaaaa
-
 # 5 characters/digits to make 916,132,832 url
-
 # we will use a-z, A-Z, and 0-9
-
 # we expect to generate 1 million url in 6 months.
-
-
-if __name__ == '__main__':
-    yo = ReplaceUrl()
-    print(yo.convert_long_to_short('abc'))
-    print(yo.convert_long_to_short('face'))
-    print(yo.convert_long_to_short('face'))
-    print(yo.convert_long_to_short('face'))
-    print(yo.convert_long_to_short('face'))
-    print(yo.convert_short_to_long('http://www.uRshort.us/a'))
-    print(yo.convert_short_to_long('http://www.uRshort.us/u'))
-    print(yo.convert_short_to_long('u'))
-

@@ -1,4 +1,4 @@
-import short_handler
+from models import short_handler
 
 
 def user_interface():
